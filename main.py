@@ -1,8 +1,10 @@
 """
-ver 1.1.0 - 20230109
+ver 1.1.2 - 20230109
 ============================================================
                        업데이트 내역
 ------------------------------------------------------------
+ver. 1.1.2 마지막 티어가 출력되지 않는 오류 수정
+ver. 1.1.1 티어의 인터벌 수가 다르면 경고 메시지 출력
 ver. 1.1.0 배포 20230109
 ver. 1.0.0 Initial Commit 20230109
 ============================================================
@@ -101,7 +103,7 @@ class MainApp(QMainWindow):
         self.helpBtn.clicked.connect(lambda: opn('https://github.com/SeHaan/program_TGtoLIST'))
 
         ## window ##
-        self.setWindowTitle("TextGrid to List for ASK-REAL (ver. 1.1.0)")
+        self.setWindowTitle("TextGrid to List for ASK-REAL (ver. 1.1.2)")
         self.setWindowIcon(QIcon(resource_path("img\\icon.png")))
         self.resize(1000, 300)
         self.center()
@@ -165,7 +167,9 @@ class MainApp(QMainWindow):
                             self.NoFileWarning()
                             return
                         else:
-                            task.json_to_list(new_file, new_file)                            
+                            task.json_to_list(new_file, new_file)
+                            if not task.json_to_list(new_file, new_file):
+                                self.NotSameLenTiers()
                             self.fileNameBox.append(new_file + '.txt')
                     else:
                         self.NoFileWarning()
@@ -181,6 +185,10 @@ class MainApp(QMainWindow):
     def NotTextGridWaring(self):
         self.statusBar().showMessage('오류: 텍스트그리드가 아닌 파일 포함')
         msgBox = QMessageBox.critical(self, 'Warning', '오류: 텍스트그리드가 아닌 파일이 포함되어 있습니다')
+
+    def NotSameLenTiers(self):
+        self.statusBar().showMessage('경고: 길이가 다른 티어 포함')
+        msgBox = QMessageBox.critical(self, 'Warning', '경고: 길이가 다른 티어를 포함하고 있습니다. 정상적인 리스트가 만들어지지 않을 수 있습니다.')
 
     def CompleteJSON(self):
         self.statusBar().showMessage('완료')

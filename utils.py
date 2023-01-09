@@ -1,8 +1,10 @@
 """
-ver 1.1.0 - 20230109
+ver 1.1.2 - 20230109
 ============================================================
                        업데이트 내역
 ------------------------------------------------------------
+ver. 1.1.2 마지막 티어가 출력되지 않는 오류 수정
+ver. 1.1.1 티어의 인터벌 수가 다르면 경고 메시지 출력
 ver. 1.1.0 배포 20230109
 ver. 1.0.0 Initial Commit 20230109
 ============================================================
@@ -218,6 +220,13 @@ class TextGridJSON:
         j = 0 # index of intervals
         k = 0 # index of items in lines
 
+        isSameLen = True
+
+        for num in range(len(item)):
+            if num != 0:
+                if item[num]["header"]["size"] != item[num-1]["header"]["size"]:
+                    isSameLen = False
+
         while True:
             if j == len(item[i]["content"]) - 1:
                 break
@@ -231,7 +240,7 @@ class TextGridJSON:
 
             if line['text'] == "":
                 line = {}
-                if i >= len(item) - 1:
+                if i >= len(item):
                     i = 0
                     j += 1
                 continue
@@ -269,3 +278,5 @@ class TextGridJSON:
         with open(csv_name + '.txt', 'w', encoding='utf-8') as fn:
             fn.write(new_lines)
             fn.close()
+
+        return isSameLen
